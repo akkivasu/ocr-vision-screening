@@ -1,0 +1,6 @@
+streamlit
+azure-core
+azure-ai-formrecognizer
+pandas
+openpyxl
+xlsxwriter
