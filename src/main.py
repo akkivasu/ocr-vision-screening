@@ -47,15 +47,24 @@ def sanitizeSLNO(table):
     
     return table
 
-def removeEmptyRows(table):
-    if len(table) < 2:  # If table has less than 2 rows, no need to process
-        return table
+# def removeEmptyRows(table):
+#     if len(table) < 2:  # If table has less than 2 rows, no need to process
+#         return table
     
-    # Keep the header (first row) and filter the rest
-    if docType(table) == 1:
-        return [table[0]] + [row for row in table[1:] if row[1].strip() != ""]
-    elif docType(table) == 2:
-        return [table[0]] + [table[1]] + [row for row in table[2:] if row[1].strip() != ""]
+#     # Keep the header (first row) and filter the rest
+#     if docType(table) == 1:
+#         return [table[0]] + [row for row in table[1:] if row[1].strip() != ""]
+#     elif docType(table) == 2:
+#         return [table[0]] + [table[1]] + [row for row in table[2:] if row[1].strip() != ""]
+def removeEmptyRows(table):
+    # Start from the third row (index 2) and iterate backwards
+    for i in range(len(table) - 1, 1, -1):
+        # Check if the second column (index 1) is empty
+        if not table[i][1].strip():
+            # If it's empty, remove the entire row
+            del table[i]
+    
+    return table
 
 def sanitizeClass(table):
     if len(table) < 2:  # If table has less than 2 rows, no need to sanitize
@@ -107,6 +116,10 @@ def process_document(uploaded_file):
             all_tables_data.extend(table_data)
         else:
             all_tables_data.extend(table_data[docType(table_data):])
+
+    print(type(all_tables_data))
+    print(all_tables_data)
+    print(removeEmptyRows(all_tables_data))
 
     all_tables_data = sanitizeSex(sanitizeClass(sanitizeSLNO(removeEmptyRows(all_tables_data))))
 
